@@ -6,9 +6,11 @@ import { TodoModule } from './todo/todo.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      url: 'postgresql://postgres:ODvFDpKvTQTWi5cA@db.bsclnoqpauirnbfguwzm.supabase.co:5432/postgres',
-      ssl: {
-        rejectUnauthorized: false
+      url: 'postgresql://neondb_owner:npg_dHUMRl8wGfY5@ep-lingering-haze-aexhx23b-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
+      extra: {
+        ssl: {
+          rejectUnauthorized: false,
+        },
       },
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true
