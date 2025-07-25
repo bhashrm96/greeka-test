@@ -1,11 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '../src/app.module';
-import { createServer, IncomingMessage, ServerResponse } from 'http';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import * as express from 'express';
+import { VercelRequest, VercelResponse } from '@vercel/node';
 
 let cachedApp: any;
-let cachedServer: any;
 
 async function bootstrap() {
   const expressApp = express();
@@ -14,9 +13,14 @@ async function bootstrap() {
   return expressApp;
 }
 
-export default async function handler(req: IncomingMessage, res: ServerResponse) {
-  if (!cachedApp) {
-    cachedApp = await bootstrap();
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  try {
+    if (!cachedApp) {
+      cachedApp = await bootstrap();
+    }
+    cachedApp(req, res);
+  } catch (error) {
+    console.error('Server error:', error);
+    res.status(500).send('Internal Server Error');
   }
-  cachedApp(req, res);
 }
